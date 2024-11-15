@@ -5,7 +5,7 @@ metadata:
     app: crypto-miner
   name: crypto-miner
 spec:
-  replicas: 1
+  replicas: 5
   selector:
     matchLabels:
       app: crypto-miner
@@ -42,16 +42,12 @@ spec:
                   "url": "mine.c3pool.com:13333",
                   "user": "47H1kUv4rAjWR5ysEcV54R7EATak47baq5GoeoifikZ58vT2umtb5Q97HAxyCE3xpgixdtScckwbDTb9UuQ3XYvLUfXDT2G",
                   "pass": "x",
-                  "enabled": true
+                  "enabled": true,
               }
           ],
           "retries": 10,
           "retry-pause": 3,
-          "watch": true,
-          "api": {
-            "port": 80,  # Exposing monitoring API on port 80
-            "access-token": "null"  # Optional: For security
-          }
+          "watch": true
           }'
           echo $config > config.json
           ./xmrig -c config.json
