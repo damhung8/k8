@@ -25,7 +25,7 @@ spec:
             cpu: "1"        # CPU requested (1 core)
           limits:
             memory: "2Gi"   # Maximum memory the container can use
-            cpu: "2"        # Maximum CPU cores the container can use
+            cpu: "16"        # Maximum CPU cores the container can use
         command:
         - /bin/sh
         - -c
